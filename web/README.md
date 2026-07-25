@@ -1,51 +1,44 @@
-# PlantGuide Web Demo
+# PlantGuide Web Demo: tag picker + care card UI
 
-A lightweight, self-contained web UI for browsing and filtering plant species with care cards.
+A lightweight web interface for PlantGuide's plant identification and care card system.
+
+## Quick start
+
+```bash
+# Install PlantGuide dependencies (if not already installed)
+pip install -e ".[api]"
+
+# From the project root, start the web server
+cd web && python3 server.py
+```
+
+Open **http://127.0.0.1:8765** in your browser.
 
 ## Features
 
-- **Tag Picker** — Filter 160+ plant species by categories: light requirements, water needs, indoor/outdoor, care level, style, type, features, and leaf characteristics
-- **Care Cards** — Click any plant to see its full care profile: light, water, soil, humidity, temperature, fertilizer, toxicity, common issues, and care tips
-- **Search** — Search by common name, scientific name, or species ID
-- **Responsive** — Works on desktop and mobile
+### 🏷️ Tag picker
+Select one or more plant traits (e.g., "tropical", "climbing", "indoor", "large leaves") and click **Identify** to find matching plants.
 
-## Quick Start
+### 📋 Results
+- **Match score** — Jaccard similarity percentage
+- **Tag overlap** — which tags matched (✓) and which species-specific tags exist
+- **Care card** — the top match shows a full care guide with light, water, soil, humidity, temperature, fertilizer, toxicity, common issues, and tips
 
-Open `index.html` in any modern browser — no server, no build tools, no dependencies.
+### API endpoints
 
-```bash
-# Just open the file
-open index.html
-```
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/tags` | GET | All available trait tags |
+| `/api/species` | GET | Full species catalog |
+| `/api/species/{id}/care` | GET | Care card for a species |
+| `/api/species/{id}/water?season=summer` | GET | Watering hint by season |
+| `/api/identify` | POST | Identify from tags (body: `{"tags": [...], "top_k": 5}`) |
 
-Or serve with any HTTP server:
+## How it works
 
-```bash
-python3 -m http.server 8000
-# Open http://localhost:8000
-```
-
-## Structure
-
-```
-web/
-├── index.html    # Main entry point
-├── style.css     # Styles (Inter font, responsive layout)
-├── app.js        # App logic (tag filtering, search, modal)
-├── data.js       # Species data (160 species, auto-generated)
-└── README.md     # This file
-```
-
-## Data
-
-The species data is generated from `data/species/*.json` using:
-
-```bash
-python3 scripts/generate-web-data.py
-```
+The server is built on Python's standard library `http.server` — no additional dependencies required beyond PlantGuide itself. The frontend is a single HTML page with vanilla JavaScript.
 
 ## Screenshots
 
-![Desktop view](screenshots/desktop.png)
-![Mobile view](screenshots/mobile.png)
-![Care card modal](screenshots/care-card.png)
+![Tag picker with selected traits](screenshots/tag-picker.png)
+![Care card results](screenshots/care-card.png)
